@@ -21,7 +21,7 @@ function CoreCord_Watermark() {
 	}, 5100);
 	setTimeout(() => {
 		document.getElementById("CoreCord_WATERMARK").outerHTML=""
-	}, 1500);
+	}, 6100);
 }
 
 CoreCord_Watermark()
