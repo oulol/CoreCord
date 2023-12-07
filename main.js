@@ -334,17 +334,4 @@ CoreCord.Init = function() {
 CoreCord.initialized = false
 CoreCord.Init()
 CoreCord.Watermark()
-
-CoreCord.checkboxes = document.getElementsByClassName("checkbox")
-for (let i = 0, check; check = CoreCord.checkboxes[i]; i++, i < CoreCord.checkboxes.length) {
-	if ("checked" in check.classList){
-		check.removeClass("checked");
-		check.width();  // required to restart the animations after changing class
-		check.addClass("unchecked");
-	}else{
-		check.removeClass("unchecked");
-		check.width();  // required to restart the animations after changing class
-		check.addClass("checked");    
-	}
-}
 }
