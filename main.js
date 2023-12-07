@@ -1,3 +1,4 @@
+fs = nodejs.fs()
 if (document.getElementById("CoreCord_MENU") == undefined) {
 ccstyle = document.createElement("style")
 document.head.appendChild(ccstyle)
@@ -120,10 +121,18 @@ CoreCord = {}
 CoreCord.zIndex = 999999
 CoreCord.mod = {}
 CoreCord.data = {}
-CoreCord.saveConfig = function() {
-	console.log(fs.readFileSync("./discord.js").toString())
+CoreCord.readConfig = function() {
+	let parsed = JSON.parse(fs.readFile("config.json"))
+	if (parsed != undefined) {
+		CoreCord.data = parsed
+	} else {
+		console.log("[CoreCord] No config file was found, unable to load data.")
+	}
 }
-//CoreCord.saveConfig()
+CoreCord.saveConfig = function() {
+	fs.writeFile("config.json",JSON.stringify(CoreCord.data))
+}
+CoreCord.readConfig()
 CoreCord.mod.Snow = function() {
 	var interval
 	func()
@@ -155,14 +164,14 @@ CoreCord.mod.Snow = function() {
 			}, speed*1000+(size*10));
 		}
 		clearInterval(interval)
-		interval = setInterval(func, Number(CoreCord.data.Snow.delay)*1000);
+		interval = setInterval(func, CoreCord.data.Snow.delay);
 	}
 }
 CoreCord.mods = [
 	{
 		"name":"Snow",
 		"description":"Adds snow to Discord",
-		"settings":{"delay":{"value":7,"description":"Delay between snowflakes, In seconds."}},
+		"settings":{"delay":{"value":1000,"description":"Delay between snowflakes, In milliseconds.","type":"int"}},
 		"function": CoreCord.mod.Snow
 	}
 ]
@@ -198,7 +207,7 @@ CoreCord.Watermark = function() {
 CoreCord.isOpen = false
 CoreCord.Menu = function() {
 	if (CoreCord.isOpen) {
-		CoreCord.MenuElement.style.left = "-410px"
+		CoreCord.MenuElement.style.left = "-310px"
 		CoreCord.MenuElement.style.opacity = 0
 		CoreCord.isOpen = false
 	} else {
@@ -317,6 +326,7 @@ CoreCord.Init = function() {
 		CoreCord.titleBar.appendChild(button)
 		CoreCord.MenuElement = document.getElementById("CoreCord_MENU")
 		CoreCord.initialized=true
+		CoreCord.saveConfig()
 	} else {
 		CoreCord.initialized = true
 	}
