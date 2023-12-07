@@ -157,7 +157,7 @@ CoreCord.mod.Snow = function() {
 			setTimeout(() => {
 				flake.style.top="100%"
 				flake.style.left=pos+(Math.floor(Math.random() * 300)-150)
-				flake.style.rotate=(Math.floor(Math.random() * 180)-90)+"deg"
+				flake.style.rotate=(Math.floor(Math.random() * 360)-180)+"deg"
 			}, 50);
 			setTimeout(() => {
 				flake.outerHTML=""
