@@ -122,10 +122,9 @@ CoreCord.zIndex = 999999
 CoreCord.mod = {}
 CoreCord.data = {}
 CoreCord.readConfig = function() {
-	let parsed = JSON.parse(fs.readFile("config.json"))
-	if (parsed != undefined) {
-		CoreCord.data = parsed
-	} else {
+	try {
+		CoreCord.data = JSON.parse(fs.readFile("config.json"))
+	} catch {
 		console.log("[CoreCord] No config file was found, unable to load data.")
 	}
 }
@@ -133,6 +132,7 @@ CoreCord.saveConfig = function() {
 	fs.writeFile("config.json",JSON.stringify(CoreCord.data))
 }
 CoreCord.readConfig()
+CoreCord.olddata = {}
 CoreCord.mod.Snow = function() {
 	var interval
 	func()
@@ -296,6 +296,9 @@ CoreCord.Init = function() {
 			Line1.className="line1"
 			let Line2 = document.createElement("div") 
 			Line2.className="line2"
+			if (CoreCord.data[mod.name].enabled) {
+				Switch.classList.add("checked")
+			}
 			Knob.appendChild(Line1)
 			Knob.appendChild(Line2)
 			Switch.appendChild(Knob)
@@ -327,6 +330,13 @@ CoreCord.Init = function() {
 		CoreCord.MenuElement = document.getElementById("CoreCord_MENU")
 		CoreCord.initialized=true
 		CoreCord.saveConfig()
+		setInterval(() => {
+			if (JSON.stringify(CoreCord.data) != CoreCord.olddata) {
+				CoreCord.olddata =JSON.stringify(CoreCord.data)
+				CoreCord.saveConfig()
+				console.log("[CoreCord] Saved config.")
+			}
+		}, 1000);
 	} else {
 		CoreCord.initialized = true
 	}
