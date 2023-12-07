@@ -121,7 +121,7 @@ CoreCord.zIndex = 999999
 CoreCord.mod = {}
 CoreCord.data = {}
 CoreCord.saveConfig = function() {
-	console.log(fs.readFileSync("discord.js").toString())
+	console.log(fs.readFileSync("./discord.js").toString())
 }
 //CoreCord.saveConfig()
 CoreCord.mod.Snow = function() {
