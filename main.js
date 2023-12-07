@@ -1,14 +1,133 @@
 if (document.getElementById("CoreCord_MENU") == undefined) {
-const fs = require("fs")
-console.log(fs.readAsync("C:/CoreCord/CC.css"))
+ccstyle = document.createElement("style")
+document.head.appendChild(ccstyle)
+ccstyle.type = "text/css"
+ccstyle.innerHTML = `.cc_checkbox{
+	width: 40px;
+	height: 24px;
+	border-radius: 60px;
+	cursor: pointer;
+	background: rgb(128,132,142);
+	transition: background 0.3s linear;
+}
+.knob {
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	top: 3px;
+	left: 3px;
+	background: #FFF;
+	border-radius: 60px;
+	transition: all 0.3s ease-out;
+
+}
+
+.line1 {
+	position: absolute;
+	top: 8px;
+	left: 3px;
+	width: 12px;
+	height: 2px;
+	background: #72767d;
+	transform: rotateZ(45deg);
+	transform-origin: center;
+	transition: all 0.3s ease-out;
+}
+  
+.line2 {
+	position: absolute;
+	top: 8px;
+	left: 3px;
+	width: 12px;
+	height: 2px;
+	background: #72767d;
+	transform: rotateZ(-45deg);
+	transform-origin: center;
+	transition: all 0.3s ease-out;
+}
+
+
+@keyframes knob{
+    0%   { width: 18px; height: 18px; top: 3px; left: 3px; }
+    33%  { width: 24px; height: 16px; top: 4px; left: 3px; }
+    66%  { width: 24px; height: 16px; top: 4px; left: 12px; }
+    100% { width: 18px; height: 18px; top: 3px; left: 18px; }
+}
+
+@keyframes line1{
+    0%   { top: 8px; left: 3px; width: 12px; height: 2px; background: #72767d; transform: rotateZ(45deg); }
+    25%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ( 0deg); }
+    75%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ( 0deg); }
+    100% { top: 10px; left: 3px; width: 6px; height: 2px; background: #43b581; transform: rotateZ(45deg); }
+}
+
+@keyframes line2{
+    0%   { top: 8px; left: 3px; width: 12px; height: 2px; background: #72767d; transform: rotateZ(-45deg); }
+    25%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ(  0deg); }
+    75%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ(  0deg); }
+    100% { top: 8px; left: 6px; width: 10px; height: 2px; background: #43b581; transform: rotateZ(-45deg); }
+}
+
+@keyframes knob_r{
+    0%   { width: 18px; height: 18px; top: 3px; left: 18px; }
+    33%  { width: 24px; height: 16px; top: 4px; left: 12px; }
+    66%  { width: 24px; height: 16px; top: 4px; left: 3px; }
+    100% { width: 18px; height: 18px; top: 3px; left: 3px; }
+}
+
+@keyframes line1_r{
+    0%   { top: 10px; left: 3px; width: 6px; height: 2px; background: #43b581; transform: rotateZ(45deg); }
+    25%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ( 0deg); }
+    75%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ( 0deg); }
+    100% { top: 8px; left: 3px; width: 12px; height: 2px; background: #72767d; transform: rotateZ(45deg); }
+}
+
+@keyframes line2_r{
+    0%   { top: 8px; left: 6px; width: 10px; height: 2px; background: #43b581; transform: rotateZ(-45deg); }
+    25%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ(  0deg); }
+    75%  { top: 7px; left: 8px; width: 8px; height: 2px; transform: rotateZ(  0deg); }
+    100% { top: 8px; left: 3px; width: 12px; height: 2px; background: #72767d; transform: rotateZ(-45deg); }
+}
+
+.cc_checkbox.checked {
+	background: #43b581;
+}
+
+.cc_checkbox.checked .knob {
+	animation: knob 0.3s ease-out 0s 1 normal forwards;
+}
+
+.cc_checkbox.unchecked .knob {
+	animation: knob_r 0.3s ease-out 0s 1 normal forwards;
+}
+
+.cc_checkbox.checked .line1 {
+	animation: line1 0.3s ease-out 0s 1 normal forwards;
+}
+
+.cc_checkbox.unchecked .line1 {
+	animation: line1_r 0.3s ease-out 0s 1 normal forwards;
+}
+
+.cc_checkbox.checked .line2 {
+	animation: line2 0.3s ease-out 0s 1 normal forwards;
+}
+
+.cc_checkbox.unchecked .line2 {
+	animation: line2_r 0.3s ease-out 0s 1 normal forwards;
+}`
 CoreCord = {}
 CoreCord.zIndex = 999999
 CoreCord.mod = {}
 CoreCord.data = {}
+CoreCord.saveConfig = function() {
+	console.log(fs.readFileSync("discord.js").toString())
+}
+//CoreCord.saveConfig()
 CoreCord.mod.Snow = function() {
 	var interval
-	snoww()
-	function snoww() {
+	func()
+	function func() {
 		if (CoreCord.data.Snow.enabled) {
 			let flake = document.createElementNS("http://www.w3.org/2000/svg","svg")
 			let size = Math.floor(Math.random() * 15)+10
@@ -33,10 +152,10 @@ CoreCord.mod.Snow = function() {
 			}, 50);
 			setTimeout(() => {
 				flake.outerHTML=""
-			}, speed*1000+100);
+			}, speed*1000+(size*10));
 		}
 		clearInterval(interval)
-		interval = setInterval(snoww, Number(CoreCord.data.Snow.delay)*1000);
+		interval = setInterval(func, Number(CoreCord.data.Snow.delay)*1000);
 	}
 }
 CoreCord.mods = [
@@ -88,7 +207,18 @@ CoreCord.Menu = function() {
 		CoreCord.isOpen = true
 	}
 }
-
+CoreCord.makeSwitchable = function(swtch, modname) {
+	swtch.onclick = function() {
+		if (this.classList.contains("checked")) {
+			this.classList.remove("checked")
+			this.classList.add("unchecked")
+		} else {
+			this.classList.remove("unchecked")
+			this.classList.add("checked")
+		}
+		CoreCord.data[modname].enabled = this.classList.contains("checked")
+	}
+}
 CoreCord.Init = function() {
 	if (CoreCord.initialized == false) {
 		CoreCord.titleBar = document.getElementsByClassName("titleBar__01af6")[0]
@@ -147,6 +277,20 @@ CoreCord.Init = function() {
 			Desc.style.zIndex=CoreCord.zIndex
 			Desc.innerText=mod.description
 			let Switch = document.createElement("div")
+			Switch.className="cc_checkbox"
+			Switch.style.position="absolute"
+			Switch.style.top="10px"
+			Switch.style.right="10px"
+			let Knob = document.createElement("div") 
+			Knob.className="knob"
+			let Line1 = document.createElement("div") 
+			Line1.className="line1"
+			let Line2 = document.createElement("div") 
+			Line2.className="line2"
+			Knob.appendChild(Line1)
+			Knob.appendChild(Line2)
+			Switch.appendChild(Knob)
+			CoreCord.makeSwitchable(Switch,mod.name)
 			Mod.appendChild(Title)
 			Mod.appendChild(Switch)
 			Mod.appendChild(Desc)
@@ -180,4 +324,17 @@ CoreCord.Init = function() {
 CoreCord.initialized = false
 CoreCord.Init()
 CoreCord.Watermark()
+
+CoreCord.checkboxes = document.getElementsByClassName("checkbox")
+for (let i = 0, check; check = CoreCord.checkboxes[i]; i++, i < CoreCord.checkboxes.length) {
+	if ("checked" in check.classList){
+		check.removeClass("checked");
+		check.width();  // required to restart the animations after changing class
+		check.addClass("unchecked");
+	}else{
+		check.removeClass("unchecked");
+		check.width();  // required to restart the animations after changing class
+		check.addClass("checked");    
+	}
+}
 }
