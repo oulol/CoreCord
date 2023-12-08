@@ -116,6 +116,14 @@ ccstyle.innerHTML = `.cc_checkbox{
 
 .cc_checkbox.unchecked .line2 {
 	animation: line2_r 0.3s ease-out 0s 1 normal forwards;
+}
+
+.no_scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+.cc_hidden {
+	display: none;
 }`
 CoreCord = {}
 CoreCord.zIndex = 999999
@@ -124,13 +132,13 @@ CoreCord.data = {}
 CoreCord.readConfig = function() {
 	try {
 		CoreCord.data = JSON.parse(fs.readFile("config.json"))
-	} catch {
+	} catch (e) {
 		console.log("[CoreCord] No config file was found, unable to load data.")
-	}
-}
+	};
+};
 CoreCord.saveConfig = function() {
 	fs.writeFile("config.json",JSON.stringify(CoreCord.data))
-}
+};
 CoreCord.readConfig()
 CoreCord.olddata = {}
 CoreCord.mod.Snow = function() {
@@ -164,7 +172,7 @@ CoreCord.mod.Snow = function() {
 			}, speed*1000+(size*10));
 		}
 		clearInterval(interval)
-		interval = setInterval(func, CoreCord.data.Snow.delay);
+		interval = setInterval(func, CoreCord.data.Snow.delay)
 	}
 }
 CoreCord.mods = [
@@ -196,7 +204,6 @@ CoreCord.Watermark = function() {
 		document.getElementById("CoreCord_WATERMARK").style.opacity=1
 		setTimeout(() => {
 			document.getElementById("CoreCord_WATERMARK").style.transform="translateY(-20px)"
-			
 			setTimeout(() => {
 				document.getElementById("CoreCord_WATERMARK").outerHTML=""
 			}, 300);
@@ -242,31 +249,33 @@ CoreCord.Init = function() {
 		menu.style.background = "var(--background-primary)"
 		menu.style.position="absolute"
 		menu.id = "CoreCord_MENU"
-		let toppingd = document.createElement("div")
-		toppingd.style.position="relative"
-		toppingd.style.height="5px"
-		toppingd.style.width="100%"
-		toppingd.opacity=0
-		menu.appendChild(toppingd)
-		CoreCord.mods.forEach((mod) => {
+		let modsm = document.createElement("div")
+		modsm.style.width="290px"
+		modsm.style.left="5px"
+		modsm.style.height="calc(100% - 45px)"
+		modsm.style.bottom="5px"
+		modsm.style.borderRadius=menu.style.borderRadius
+		modsm.style.position="absolute"
+		modsm.style.background="var(--background-secondary)"
+		modsm.style.overflowY="scroll"
+		modsm.className = "no_scrollbar"
+		modsm.id = "CoreCord_MODS"
+		CoreCord.mods.forEach((mod,index) => {
 			if (CoreCord.data[mod.name] == undefined) {
 				CoreCord.data[mod.name] = {"enabled":false}
 				for (let [set, value] of Object.entries(mod.settings)) {
 					CoreCord.data[mod.name][set] = value.value
 				}
  			}
-			let topping = document.createElement("div")
-			topping.style.position="relative"
-			topping.style.height="5px"
-			topping.style.width="100%"
-			topping.opacity=0
 			let Mod = document.createElement("div")
 			Mod.style.borderRadius=menu.style.borderRadius
-			Mod.style.background = "var(--background-secondary)"
-			Mod.style.width="calc(100% - 20px)"
-			Mod.style.left="10px"
+			Mod.style.background = "var(--background-secondary-alt)"
+			Mod.style.width="calc(100% - 10px)"
+			Mod.style.marginLeft="5px"
+			Mod.style.marginTop="5px"
 			Mod.style.position="relative"
 			Mod.style.height="130px"
+			Mod.dataset.modname = mod.name.toLowerCase()
 			let Title = document.createElement("a")
 			Title.style.position="absolute"
 			Title.style.left="10px"
@@ -290,15 +299,26 @@ CoreCord.Init = function() {
 			Switch.style.position="absolute"
 			Switch.style.top="10px"
 			Switch.style.right="10px"
-			let Knob = document.createElement("div") 
+			let Knob = document.createElement("div")
 			Knob.className="knob"
-			let Line1 = document.createElement("div") 
+			let Line1 = document.createElement("div");
 			Line1.className="line1"
-			let Line2 = document.createElement("div") 
+			let Line2 = document.createElement("div")
 			Line2.className="line2"
 			if (CoreCord.data[mod.name].enabled) {
 				Switch.classList.add("checked")
 			}
+			let Settings = document.createElementNS("http://www.w3.org/2000/svg","svg")
+			Settings.ariaHidden=true
+			Settings.role="img"
+			Settings.setAttributeNS(null,"viewBox","0 0 24 24")
+			Settings.innerHTML='<path fill="currentColor" fill-rule="evenodd" d="M10.56 1.1c-.46.05-.7.53-.64.98.18 1.16-.19 2.2-.98 2.53-.8.33-1.79-.15-2.49-1.1-.27-.36-.78-.52-1.14-.24-.77.59-1.45 1.27-2.04 2.04-.28.36-.12.87.24 1.14.96.7 1.43 1.7 1.1 2.49-.33.8-1.37 1.16-2.53.98-.45-.07-.93.18-.99.64a11.1 11.1 0 0 0 0 2.88c.06.46.54.7.99.64 1.16-.18 2.2.19 2.53.98.33.8-.14 1.79-1.1 2.49-.36.27-.52.78-.24 1.14.59.77 1.27 1.45 2.04 2.04.36.28.87.12 1.14-.24.7-.95 1.7-1.43 2.49-1.1.8.33 1.16 1.37.98 2.53-.07.45.18.93.64.99a11.1 11.1 0 0 0 2.88 0c.46-.06.7-.54.64-.99-.18-1.16.19-2.2.98-2.53.8-.33 1.79.14 2.49 1.1.27.36.78.52 1.14.24.77-.59 1.45-1.27 2.04-2.04.28-.36.12-.87-.24-1.14-.96-.7-1.43-1.7-1.1-2.49.33-.8 1.37-1.16 2.53-.98.45.07.93-.18.99-.64a11.1 11.1 0 0 0 0-2.88c-.06-.46-.54-.7-.99-.64-1.16.18-2.2-.19-2.53-.98-.33-.8.14-1.79 1.1-2.49.36-.27.52-.78.24-1.14a11.07 11.07 0 0 0-2.04-2.04c-.36-.28-.87-.12-1.14.24-.7.96-1.7 1.43-2.49 1.1-.8-.33-1.16-1.37-.98-2.53.07-.45-.18-.93-.64-.99a11.1 11.1 0 0 0-2.88 0ZM16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clip-rule="evenodd" class=""></path>'
+			Settings.setAttributeNS(null,"width","22px")
+			Settings.setAttributeNS(null,"height","22px")
+			Settings.style.top="11px"
+			Settings.style.right="56px"
+			Settings.style.position="absolute"
+			Settings.style.color="var(--interactive-normal)"
 			Knob.appendChild(Line1)
 			Knob.appendChild(Line2)
 			Switch.appendChild(Knob)
@@ -306,11 +326,44 @@ CoreCord.Init = function() {
 			Mod.appendChild(Title)
 			Mod.appendChild(Switch)
 			Mod.appendChild(Desc)
-			menu.appendChild(topping)
-			menu.appendChild(Mod)
+			Mod.appendChild(Settings)
+			modsm.appendChild(Mod)
 			mod.function()
-		})
-
+		});
+		menu.appendChild(modsm)
+		let Search = document.createElement("div")
+		Search.style.position="absolute"
+		Search.style.top="10px"
+		Search.style.left="10px"
+		Search.style.height="20px"
+		Search.style.width="280px"
+		Search.style.background="var(--background-secondary-alt)"
+		Search.style.borderRadius=menu.style.borderRadius
+		let SearchInput = document.createElement("input")
+		SearchInput.style.position="absolute"
+		SearchInput.style.width="260px"
+		SearchInput.style.height="14px"
+		SearchInput.style.fontFamily="gg sans"
+		SearchInput.style.top="0px"
+		SearchInput.style.left="5px"
+		SearchInput.style.background="rgba(0,0,0,0)"
+		SearchInput.style.color="var(--text-normal)"
+		SearchInput.style.borderColor="transparent"
+		SearchInput.id = "CoreCord_search"
+		SearchInput.placeholder="Search"
+		SearchInput.oninput = function(e) {
+			val = SearchInput.value
+			let childs = document.getElementById("CoreCord_MODS").childNodes
+			for (let i=0, item; item = childs[i]; i++) {
+				if (!item.dataset.modname.includes(val.toLowerCase())) {
+					item.classList.add("cc_hidden")
+				} else {
+					item.classList.remove("cc_hidden")
+				}
+			}
+		}
+		Search.appendChild(SearchInput)
+		menu.appendChild(Search)
 		document.body.appendChild(menu)
 		let button = document.createElement("div")
 		button.className = "winButton__88672 winButtonMinMax__72f36"
@@ -318,7 +371,7 @@ CoreCord.Init = function() {
 		button.tabIndex = -1
 		button.role = "button"
 		button.onclick = function() { CoreCord.Menu() }
-		let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
 		svg.ariaHidden=true
 		svg.role = "img"
 		svg.setAttributeNS(null,"width","12")
@@ -335,7 +388,7 @@ CoreCord.Init = function() {
 				CoreCord.olddata =JSON.stringify(CoreCord.data)
 				CoreCord.saveConfig()
 				console.log("[CoreCord] Saved config.")
-			}
+			};
 		}, 1000);
 	} else {
 		CoreCord.initialized = true
